@@ -43,6 +43,40 @@
       cursor: pointer;
     }
   </style>
+  <script>
+    // Cache filters and backgrounds
+
+    caches.open("filters").then(
+      cache => {
+        cache.addAll([
+          'static/filters/bulb.deepar',
+          'static/filters/butterfly_flying.deepar',
+          'static/filters/cowboy.deepar',
+          'static/filters/halo2.deepar',
+          'static/filters/helmet_anim.deepar',
+          'static/filters/ironman.deepar',
+          'static/filters/ironman2.deepar',
+          'static/filters/marine.deepar',
+          'static/filters/pirate1.deepar',
+          'static/filters/pubg.deepar',
+        ]);
+      }
+    );
+
+    caches.open("backgrounds").then(
+      cache => {
+        cache.addAll([
+          'static/background/background0.jpg',
+          'static/background/background1.jpg',
+          'static/background/background2.jpg',
+          'static/background/background3.jpg',
+          'static/background/background4.jpg',
+          'static/background/background5.jpg',
+        ]);
+      }
+    );
+
+  </script>
 </head>
 
 <body>

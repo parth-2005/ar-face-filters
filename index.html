@@ -1,0 +1,117 @@
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1 " />
+  <script src='https://cdn.jsdelivr.net/npm/deepar/js/deepar.js'> </script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-image: url('static/background/bg.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+    #deepar-div {
+      width: 100vw;
+      height: 100%;
+    }
+    #deepar-div canvas {
+      padding: auto;
+      margin-left: 20vw;
+      clip-path: inset(0 40% 0 0);
+      /* Clip the canvas to display only 60% of it */
+    }
+
+    .button_container {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 5rem;
+      display: flex;
+      justify-content: space-around;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+    .button_container button {
+      width: 30%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      font-size: 1.5rem;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Div element where AR preview will be inserted -->
+  <div id='deepar-div'></div>
+  <div class="button_container">
+    <button id="change_filter" onclick="changeFilter()">Change Filter</button>
+    <button id="take_photo" onclick="takePhoto()">Take Photo</button>
+    <button id="change_background" onclick="changeBackground()">Change Background</button>
+  </div>
+  <!-- Initialize DeepAR and load AR effect/filter -->
+  <script>
+    (async function () {
+      const deepAR = await deepar.initialize({
+        // licenseKey from environment variable
+        licenseKey: "e3e3a3ae2ed742d875b03ef5d83050df72f8329b2a82bf8bb669753fe0b99ea87acfd3d754f8e7b3",
+        previewElement: document.querySelector('#deepar-div'),
+        effect: "https://cdn.jsdelivr.net/npm/deepar/effects/aviators",
+      });
+
+      window.takePhoto = async function () {
+        const photo = await deepAR.takeScreenshot();
+        const a = document.createElement('a');
+        a.href = photo;
+        a.download = 'photo.png';
+        a.click();
+      }
+
+      let backgroundIndex = 0;
+      window.changeBackground = async function () {
+        backgroundIndex = (backgroundIndex + 1) % 7;
+        console.log(backgroundIndex);
+        try {
+          if (backgroundIndex === 6) {
+            await deepAR.backgroundReplacement(false);
+            return;
+          }
+          await deepAR.backgroundReplacement(true, "static/background/background"+backgroundIndex+".jpg");
+        } catch (error) {
+          console.error(error);
+        }
+      }
+      // change filter
+      let filterIndex = 0;
+      window.changeFilter = async function () {
+        const filters = [
+          'https://cdn.jsdelivr.net/npm/deepar/effects/aviators',
+          'static/filters/bulb.deepar',
+          'static/filters/butterfly_flying.deepar',
+          'static/filters/cowboy.deepar',
+          'static/filters/halo2.deepar',
+          'static/filters/helmet_anim.deepar',
+          'static/filters/ironman.deepar',
+          'static/filters/ironman2.deepar',
+          'static/filters/marine.deepar',
+          'static/filters/pirate1.deepar',
+          'static/filters/pubg.deepar',
+        ];
+        filterIndex = (filterIndex + 1) % filters.length;
+        console.log(filterIndex);
+        try {
+          await deepAR.switchEffect(filters[filterIndex]);
+        } catch (error) {
+
+          console.error(error);
+        }
+      }
+    })();
+  </script>
+</body>
+
+</html>
